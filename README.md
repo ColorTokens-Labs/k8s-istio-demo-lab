@@ -198,7 +198,8 @@ To verify that the application is running in the cluster and serving web pages e
 kubectl exec "$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}')" -c ratings -- curl -sS productpage:9080/productpage | grep -o "<title>.*</title>"
 ```
 
-You should see the following:￼
+You should see the following:
+
 ![sample app test](assets/images/sample-app-testing.png)
 
 </p>
@@ -207,7 +208,7 @@ You should see the following:￼
 <details><summary>Enable external access</summary>
 <p>
 
-To enable access to the application from outside the cluster, we need to deploy an Istio ingress gateway.
+To enable access to the application from outside the cluster, we need to deploy an Istio ingress gateway:
 
 ```
 kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml
