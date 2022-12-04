@@ -2,6 +2,7 @@
 Deploy a single-VM demo lab for Xshield container security.  This demo lab uses Kubernetes-in-Docker (**kind**) to create a small K8s cluster, on which we run the **Istio** service mesh, and deploy a simple demo application provided by Istio.
 
 <details><summary>Deploy an Ubuntu VM</summary>
+<p>
 
 The first step is deploying an Ubuntu VM, or you may use a physical machine running Ubuntu.  The recommended system configuration is:
 
@@ -17,6 +18,8 @@ sudo apt update && sudo apt upgrade -y
 </details>
 
 <details><summary>Install Docker</summary>
+<p>
+
 Next, we install docker using the instructions from the Docker team.
 
 ```
@@ -52,9 +55,12 @@ Your output should look like this:
 ![docker run output](assets/images/docker-run.png)
 
 > **Warning** **Kind** *needs* docker, so proceed to the next step only after your docker installation is successful!
+
+</p>
 </details>
 
 <details><summary>Install Kind</summary>
+<p>
 
 Installing **kind** is straightforward.
 
@@ -64,9 +70,11 @@ chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 ```
 
+</p>
 </details>
 
 <details><summary>Create a K8s cluster</summary>  
+<p>
 
 It's time to create our cluster.
 
@@ -89,9 +97,11 @@ Your output should look like this:
 
 ![kind get clusters](assets/images/kind-get-clusters.png)
 
+</p>
 </details>
 
-<details><summary>Install kubectl</summary>￼
+<details><summary>Install kubectl</summary>
+<p>
 
 You will also need **kubectl** to operate on your cluster.  Download the binary from the K8s repo:
 
@@ -99,7 +109,7 @@ You will also need **kubectl** to operate on your cluster.  Download the binary 
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 ```
 
-> **Note** To make sure you have the legitimate version of kubectl, verify its checksum as follows.  The output should be "kubectl: OK"
+> **Note** To ensure you have the legitimate version of kubectl, verify its checksum as follows.  The output should be "kubectl: OK"
 ```
 curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
@@ -124,9 +134,11 @@ Your output should resemble the following:
 
 If all is well you can move on to installing Istio.
 
+</p>
 </details>
 
 <details><summary>Install Istio</summary>
+<p>
 
 Download and install Istio as follows:
 
@@ -147,11 +159,13 @@ To enable automatic Envoy sidecar proxy injection into our demo application, we 
 kubectl label namespace default istio-injection=enabled
 ```
 
+</p>
 </details>
 
 <details><summary>Deploy the sample app</summary>
+<p>
   
-We are ready to deploy the sample app provided by the Istio team.
+We are now ready to deploy the sample app provided by the Istio team.
 
 ```
 kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
@@ -159,7 +173,7 @@ kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
 
 The output should look like this:
 
-![istio sample app install](assets/images/deploy-sample-app.png)￼
+![istio sample app install](assets/images/deploy-sample-app.png)
 
 You can see the four services that comprise this application with the following command:
 ```
@@ -177,7 +191,7 @@ kubectl get pods
 Before proceeding to the next step ensure that all pods show 2/2 in the READY column as shown below:
 
 ![sample app pods](assets/images/sample-app-get-pods.png)
-￼
+
 To verify that the application is running in the cluster and serving web pages execute the following:
 
 ```
@@ -187,9 +201,11 @@ kubectl exec "$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.
 You should see the following:￼
 ![sample app test](assets/images/sample-app-testing.png)
 
+</p>
 </details>
 
 <details><summary>Enable external access</summary>
+<p>
 
 To enable access to the application from outside the cluster, we need to deploy an Istio ingress gateway.
 
@@ -205,15 +221,17 @@ istioctl analyze
 ```
 ![verify istio ingress](assets/images/istio-ingress-validate.png)
 
-There is no built-in load balancer in Kind, and while you can setup a third party load balancer, there is no need to complicate things!  We cause **kubectl**'s *port forwarding* feature to access the ingress gateway from a remote browser:
+There is no built-in load balancer in Kind, and while you can setup a third party load balancer, there is no need to complicate things!  We can use **kubectl**'s *port forwarding* feature to access the ingress gateway from a remote browser:
 
 ```
 kubectl port-forward --address  0.0.0.0 -n istio-system svc/istio-ingressgateway 8080:80
 ```
 
-You can now use your laptop browser and access the application at the following url:
+You can now access the application by pointing your browser at the following url:
 
 *http://**vm-ip**:8080/productpage*
 
 ![app access](assets/images/app-access.png)
 
+</p>
+</details>
